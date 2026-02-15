@@ -69,7 +69,7 @@ void FT :: insertMem(FT *root,FT *newMem){
 	}
 }
 
-void FT :: displayFamily(FT *root){
+void FT :: displayFamily(FT *root){  //display tree
 	if(root==NULL){
 		return;
 	}
@@ -81,7 +81,7 @@ void FT :: displayFamily(FT *root){
 	}
 int f=0;
 
-void FT :: searchMem(FT *root,int ADN){
+void FT :: searchMem(FT *root,int ADN){  //search function
     if(root == NULL)
         return;
 	
@@ -99,11 +99,12 @@ void FT :: searchMem(FT *root,int ADN){
 
 
 
-void FT :: displaySibling(FT *root ,int ADN){
+void FT :: displaySibling(FT *root ,int ADN){ //display siblings
     if(root==NULL)
     {
         return;
-    }else if(root->LC!=NULL && root->LC->AN==ADN)
+    }else
+	{ if(root->LC!=NULL && root->LC->AN==ADN)
     {
         if(root->RC!=NULL)
         {
@@ -112,23 +113,27 @@ void FT :: displaySibling(FT *root ,int ADN){
         {
             cout<<"NO slibling found\n"<<endl;
         }
-    }else if(root->RC!=NULL && root->RC->AN==ADN)
+		return;
+    }
+	 if(root->RC!=NULL && root->RC->AN==ADN)
     {
         if(root->LC!=NULL)
         {
         cout<<"Name :- "<<root->LC->name<<"\n Age :- "<<root->LC->age<<"\n Education :-" <<root->LC->edu<<"\n Address :- "<<root->LC->add<<"\n Aadhar No :- "<<root->LC->AN<<"\n Contact No :- "<<root->LC->CN;
     }
+	
     else{
         cout<<"no sibling found\n"<<endl;
         
     }
+	return;
 }
-else{
-	cout<<"Sibling not found\n";
+displaySibling(root->LC,ADN);
+displaySibling(root->RC,ADN);
 }
 }
 
-int FT :: displayAncestors(FT *root,int ADN)
+int FT :: displayAncestors(FT *root,int ADN)   //display ancestor
 {
 	if(root==NULL)
 	{
@@ -138,7 +143,7 @@ int FT :: displayAncestors(FT *root,int ADN)
 	{
 		return 1;
 	}
-	cout<<"Ancestor:\n";
+	
 	if(displayAncestors(root->LC,ADN) || displayAncestors(root->RC,ADN))
 	{   
 		
@@ -156,7 +161,7 @@ int FT :: HT(FT *root)
 {
   if(root==NULL)
   {
-      return 0;
+      return -1;
   }
   Lht=HT(root->LC);
   Rht=HT(root->RC);
@@ -171,7 +176,7 @@ int FT :: HT(FT *root)
   
 }
 
- void FT :: displayLeaf(FT *root)
+ void FT :: displayLeaf(FT *root)   //display leaf nodes
  {
      if(root==NULL)
      {
@@ -189,19 +194,21 @@ int FT :: HT(FT *root)
      }
  }
 int L;
-void FT :: displayCurrent(FT *root ,int height,int level)
+void FT :: displayCurrent(FT *root ,int ht,int level) //display current genration
 {
     if(root==NULL)
     {
         return;
-    }else if(height==level)
+    }else 
+	{
+		if(ht==level)
     {
         cout<<"Name :- "<<root->name<<"\n Age :- "<<root->age<<"\n Education :-" <<root->edu<<"\n Address :- "<<root->add<<"\n Aadhar No :- "<<root->AN<<"\n Contact No :- "<<root->CN;
          	
-    }else
-    {
-        displayCurrent(root->LC,height,level+1);
-        displayCurrent(root->RC,height,level+1);
+    }
+    
+        displayCurrent(root->LC,ht,level+1);
+        displayCurrent(root->RC,ht,level+1);
     }
 }
 	
@@ -236,7 +243,7 @@ int main(){
 			}
 			break;
 		
-			case 3 :
+		case 3 :
 			
 			if(root==NULL){
 			cout<<"Family Tree doesn't exist first create a tree"<<endl;
@@ -254,26 +261,31 @@ int main(){
 			}
 				break;
 			
-			case 4 :
+		case 4 :
 			
 				m.displayFamily(root);
 				break;
 				
-			case 5:
-			
-			int height;
+		case 5:
+			{
+			     int height;
 			      height=m.HT(root);
 			       cout<<"height of tree: \n"<<height;
 			       break;
+			}
 			
-			case 6: 
+		case 6: 
 			m.displayLeaf(root);
 			break;
 			
-			case 7:
-			       height=m.HT(root);
-			       m.displayCurrent(root,height,0);
+		case 7:
+                {
+			     int ht;
+				 int l=0;
+			       ht=m.HT(root);
+			       m.displayCurrent(root,ht,l);
 			       break;
+				}
 			       
 			case 8: 
 			      cout<<"ENTER adhar number of member to find sibling\n  "<<endl;
@@ -282,11 +294,13 @@ int main(){
 			      break;
 
 			case 9:
+			{
 			       int ADN;
 			      cout<<"ENTER adhar number of member to find Ancestor\n  "<<endl;
 			      cin>>ADN;
 			      m.displayAncestors(root,ADN);
 			      break;
+			}
 			case 10:
 				exit(0);
 				break;

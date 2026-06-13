@@ -17,6 +17,7 @@ class Student{
 	void CountTotalStudent(Student *root);
 	int HT(Student *root);
 	void displayIITStudents(Student *root);
+    void displayNonIIT(Student *root);
 	void displayLowestCETScore(Student *root);
 	void displayHighestCETScore(Student *root);
 	void displayTopThree(Student *root);
@@ -40,13 +41,13 @@ void Student::addNew()
     int ch;
 	do{  
     Student *next;
-    next=new Student;                                            //NEW MEMBER PONTER                                         // MEMORY ALLOCATE
+    next=new Student;                                                                                  
 	cout<<"Enter the data of Student :-"<<endl;
 	cout<<"Enter the id, seat number,CET score , name , add status of New student :-" <<endl;
  	cin>>next->id>>next->seatNo>>next->CETScore>>next->name>>next->AddStatus;
 	next->LC=NULL;
 	next->RC=NULL;
-	insert(root,next);                                    //CALL INSERT FUNCTION
+	insert(root,next);                                    
 	cout<<"Do u want to add one more new family member (1/0) :-";
 	cin>>ch;
 	}while(ch==1);
@@ -54,7 +55,7 @@ void Student::addNew()
 
 void Student::insert(Student *root, Student *next)
 {
-    if (next->CETScore < root->CETScore) 
+    if (next->CETScore <= root->CETScore) 
     {
         if (root->LC == NULL)
             root->LC = next;
@@ -114,6 +115,7 @@ void Student::search(Student *root, int sid)
 	}
 		else{
         search(root->LC, sid);
+
         search(root->RC, sid);
 }
 	}
@@ -160,16 +162,27 @@ void Student::displayIITStudents(Student *root)
   return;
   }
   
-      displayIITStudents(root->LC);
-  
-    if (root->AddStatus == "IIT") {
+    
+   if(root->CETScore>=95){
         cout<<"Name: "<<root->name<<"\n"<<"Status: "<<root->AddStatus<<"\n"<<"Student id: "<<root->id<<"\n"<<"Seat no: "<<root->seatNo<<"\n"<<"CET Score: "<<root->CETScore<<"\n";
+        displayIITStudents(root->LC);
     }
-    
+displayIITStudents(root->RC);
 
-    
-    displayIITStudents(root->RC);
+}
 
+void Student :: displayNonIIT(Student *root){
+    if(root==NULL){
+        return ;
+    }
+    else{
+        if(root->CETScore<95){
+       cout<<"Name: "<<root->name<<"\n"<<"Status: "<<root->AddStatus<<"\n"<<"Student id: "<<root->id<<"\n"<<"Seat no: "<<root->seatNo<<"\n"<<"CET Score: "<<root->CETScore<<"\n";
+        
+        }
+        displayNonIIT(root->LC);
+        displayNonIIT(root->RC);
+    }
 }
 
 void Student:: displayLowestCETScore(Student *root)
@@ -178,8 +191,9 @@ void Student:: displayLowestCETScore(Student *root)
         return;
 
     while (root->LC != NULL)
+    {
         root = root->LC;
-
+    }
     cout << "\nLowest CET Score Student:\n";
     cout << root->name << "  " << root->CETScore << endl;
 
@@ -191,6 +205,7 @@ if (root == NULL)
         return;
 
     while (root->RC != NULL)
+    
         root = root->RC;
 
     cout << "\nHighest CET Score Student:\n";
@@ -233,7 +248,7 @@ int main()
     s.create();
 
     do {
-        cout << "\n MENU \n1. Add Student\n2. Display All\n3. Search Student\n4. Count Students\n5. Height of Tree\n6. Display IIT Students\n7. Lowest CET Score\n8. Highest CET Score\n9.Display top 3 students \n 10. Exit\n";
+        cout << "\n MENU \n1. Add Student\n2. Display All\n3. Search Student\n4. Count Students\n5. Height of Tree\n6. Display IIT Students\n7. Lowest CET Score\n8. Highest CET Score\n9.Display top 3 students \n 10.Display non iit students\n11. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -277,7 +292,11 @@ int main()
             cnt=0;
              s.displayTopThree(root);
              break;
+
         case 10:
+            s.displayNonIIT(root);
+            break;
+        case 11:
              exit(0);
              break;
         default:cout<<"wrong choice";
